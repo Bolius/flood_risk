@@ -5,6 +5,8 @@ import requests
 from PIL import Image
 from pyproj import Transformer
 
+import json
+
 from .config import IMAGE_SIZE
 
 
@@ -43,19 +45,61 @@ def bbr_id_to_house_data(bbr_id):
 
 
 def get_basement_response(address_id):
+    user, password = os.environ["DATAFORDELEREN"].split("@")
+
+    # Finder BFE-nummer for addressen...
     response = requests.request(
         "GET",
-        "https://apps.conzoom.eu/api/v1/values/dk/unit/",
-        headers={"authorization": f"Basic {os.environ['GEO_KEY']}"},
-        params={"where": f"acadr_bbrid={address_id}", "vars": "bld_area_basement"},
+        "https://services.datafordeler.dk/DAR/DAR_BFE_Public/1/rest/husnummerTilBygningBfe?",
+        params={
+            "username": user,
+            "password": password,
+            "Format": "JSON",
+            "husnummerId": address_id,
+        },
     )
-    if response.status_code != 200:
-        raise ValueError(f"Invalid address_id: {address_id}")
-    houses = response.json()["objects"]
-    basement_size = houses[0]["values"]["bld_area_basement"] if len(houses) > 0 else 0
-    return {
-        "risk": "high" if basement_size is not None and basement_size > 0 else "low"
-    }
+
+    bfe = response.json()["jordstykkeList"][0]["samletFastEjendom"]
+
+    # Finder id på bygninger på grunden...
+    response = requests.request(
+        "GET",
+        "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/grund?",
+        params={
+            "username": user,
+            "password": password,
+            "Format": "JSON",
+            "BFENummer": bfe,
+        },
+    )
+
+    # For hver bygning, hent data om bygningen
+    for e in response.json():
+        response = requests.request(
+            "GET",
+            "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/bygning?",
+            params={
+                "username": user,
+                "password": password,
+                "Format": "JSON",
+                "Grund": e["id_lokalId"],
+            },
+        )
+
+        data = json.loads(response.content)
+
+        basement_size = 0
+        for b in data:
+            if "etageList" in b:
+                for c in b["etageList"]:
+                    if "eta022Kælderareal" in c["etage"]:
+                        if c["etage"]["eta022Kælderareal"] > basement_size:
+                            basement_size = c["etage"]["eta022Kælderareal"]
+                    if "eta025Etagetype" in c["etage"]:
+                        if c["etage"]["eta025Etagetype"] == "2":
+                            basement_size = 1
+
+    return {"risk": "high" if basement_size > 0 else "low"}
 
 
 def bounding_box(coordinates, ESPG=None, boxSize=200):
