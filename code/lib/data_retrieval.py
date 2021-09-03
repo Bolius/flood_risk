@@ -94,7 +94,10 @@ def get_basement_response(address_id):
                 for c in b["etageList"]:
                     if "eta022Kælderareal" in c["etage"]:
                         basement_size = c["etage"]["eta022Kælderareal"]
-                    if "eta025Etagetype" in c["etage"] and c["etage"]["eta025Etagetype"] == "2":
+                    if (
+                        "eta025Etagetype" in c["etage"]
+                        and c["etage"]["eta025Etagetype"] == "2"
+                    ):
                         basement_size = 1
 
     return {"risk": "high" if basement_size > 0 else "low"}

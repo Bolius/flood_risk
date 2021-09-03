@@ -35,7 +35,7 @@ class TestHollowings(unittest.TestCase):
             "coordinates"
         ]
         actual_image = get_hollowing_img(office_address, "hollowings")
-        
+
         expected_image = Image.open(
             path.join("tests", "test_images", "get_img_hollowings.png")
         ).convert("L")
