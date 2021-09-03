@@ -17,6 +17,6 @@ class TestRainRisk(unittest.TestCase):
         resp = get_rain_risk_response(data["id"], data["coordinates"])
         self.assertEqual(resp["factors"]["basement"]["risk"], "high")
         self.assertEqual(resp["factors"]["fastning"]["risk"], "medium")
-        self.assertEqual(resp["factors"]["hollowing"]["risk"], "high")
+        self.assertEqual(resp["factors"]["hollowing"]["risk"], "low")
         self.assertEqual(resp["factors"]["conductivity"]["risk"], "low")
-        self.assertEqual(resp["risk"], "high")
+        self.assertEqual(resp["risk"], "medium")

@@ -35,6 +35,7 @@ class TestHollowings(unittest.TestCase):
             "coordinates"
         ]
         actual_image = get_hollowing_img(office_address, "hollowings")
+        actual_image.save("Jarmers.png")
         expected_image = Image.open(
             path.join("tests", "test_images", "get_img_hollowings.png")
         ).convert("L")
@@ -102,8 +103,8 @@ class TestHollowings(unittest.TestCase):
         expected_hash = imagehash.average_hash(expected_image)
         self.assertTrue(actual_hash, expected_hash)
         resp.pop("image")
-        self.assertAlmostEqual(resp["house_percentage"], 0.19)
-        self.assertAlmostEqual(resp["area_percentage"], 6.83)
+        self.assertAlmostEqual(resp["house_percentage"], 0.15)
+        self.assertAlmostEqual(resp["area_percentage"], 5.92)
 
 
 if __name__ == "__main__":
