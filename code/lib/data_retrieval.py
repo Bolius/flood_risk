@@ -47,58 +47,30 @@ def bbr_id_to_house_data(bbr_id):
 def get_basement_response(address_id):
     user, password = os.environ["DATAFORDELEREN"].split("@")
 
-    # Finder BFE-nummer for addressen...
     response = requests.request(
         "GET",
-        "https://services.datafordeler.dk/DAR/DAR_BFE_Public/1/rest/husnummerTilBygningBfe?",
+        "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/bygning?",
         params={
             "username": user,
             "password": password,
             "Format": "JSON",
-            "husnummerId": address_id,
+            "husnummer": address_id,
         },
     )
 
-    bfe = response.json()["jordstykkeList"][0]["samletFastEjendom"]
+    data = json.loads(response.content)
 
-    # Finder id på bygninger på grunden...
-    response = requests.request(
-        "GET",
-        "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/grund?",
-        params={
-            "username": user,
-            "password": password,
-            "Format": "JSON",
-            "BFENummer": bfe,
-        },
-    )
-
-    # For hver bygning, hent data om bygningen
-    for e in response.json():
-        response = requests.request(
-            "GET",
-            "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/bygning?",
-            params={
-                "username": user,
-                "password": password,
-                "Format": "JSON",
-                "Grund": e["id_lokalId"],
-            },
-        )
-
-        data = json.loads(response.content)
-
-        basement_size = 0
-        for b in data:
-            if "etageList" in b:
-                for c in b["etageList"]:
-                    if "eta022Kælderareal" in c["etage"]:
-                        basement_size = c["etage"]["eta022Kælderareal"]
-                    if (
-                        "eta025Etagetype" in c["etage"]
-                        and c["etage"]["eta025Etagetype"] == "2"
-                    ):
-                        basement_size = 1
+    basement_size = 0
+    for b in data:
+        if "etageList" in b:
+            for c in b["etageList"]:
+                if "eta022Kælderareal" in c["etage"]:
+                    basement_size = c["etage"]["eta022Kælderareal"]
+                if (
+                    "eta025Etagetype" in c["etage"]
+                    and c["etage"]["eta025Etagetype"] == "2"
+                ):
+                    basement_size = 1
 
     return {"risk": "high" if basement_size > 0 else "low"}
 
