@@ -34,7 +34,7 @@ class TestDataRetrieval(unittest.TestCase):
         box = bounding_box(data["coordinates"], boxSize=200, ESPG="3857")
         self.assertEqual(
             box,
-            "1398592.0975429227,7494769.030811637,1398792.0975429227,7494969.030811637",
+            "1398592.0975429227,7494769.030811639,1398792.0975429227,7494969.030811639",
         )
 
     def test_has_basement(self):
@@ -43,12 +43,25 @@ class TestDataRetrieval(unittest.TestCase):
         self.assertEqual(get_basement_response(no_basement_id)["risk"], "low")
         self.assertEqual(get_basement_response(basement_id)["risk"], "high")
 
+    def test_has_basement_set2(self):
+        # Single family house without basement
+        id0 = address_to_house_data("Helsingevej 41, 2830 Virum")["id"]
+        self.assertEqual(get_basement_response(id0)["risk"], "low")
+
+        # Address with multiple apartments
+        id1 = address_to_house_data("Gentoftegade 95, 2820 Gentofte")["id"]
+        self.assertEqual(get_basement_response(id1)["risk"], "high")
+
+        # Specific apartment
+        id2 = address_to_house_data("Gentoftegade 95, 1. th, 2820 Gentofte")["id"]
+        self.assertEqual(get_basement_response(id2)["risk"], "high")
+
     def test_bounding_box_espg_25832(self):
         data = address_to_house_data("Kjærmarken 103, 6771 Gredstedbro")
         box = bounding_box(data["coordinates"], ESPG="25832")
         self.assertEqual(
             box,
-            "483622.52053322777,6139451.855766358,483736.7176466355,6139564.964581124",
+            "483622.5205332278,6139451.85576636,483736.7176466355,6139564.964581125",
         )
 
     def test_get_satelite_img(self):
