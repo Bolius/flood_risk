@@ -35,6 +35,7 @@ class TestHollowings(unittest.TestCase):
             "coordinates"
         ]
         actual_image = get_hollowing_img(office_address, "hollowings")
+
         expected_image = Image.open(
             path.join("tests", "test_images", "get_img_hollowings.png")
         ).convert("L")
@@ -60,14 +61,14 @@ class TestHollowings(unittest.TestCase):
     def test_house_percentage_hollowing(self):
         imgSize = (100, 100)
         hollowImg = np.zeros(imgSize).astype(np.uint8)
-        hollowImg[0:50, 0:50] = np.uint8(127)
+        hollowImg[10:60, 10:60] = np.uint8(127)
         hollowImg = Image.fromarray(hollowImg, mode="L")
 
         buildImg = np.zeros(imgSize).astype(np.uint8)
-        buildImg[25:75, 25:75] = np.uint8(127)
+        buildImg[60:90, 35:90] = np.uint8(127)
         buildImg = Image.fromarray(buildImg, mode="L")
         percentage = house_percentage_hollowing(hollowImg, buildImg)
-        self.assertEqual(percentage, 25.0)
+        self.assertAlmostEqual(percentage, 15.168539325842698)
 
     def test_generate_image_summery(self):
         shape = (100, 100)
@@ -102,8 +103,8 @@ class TestHollowings(unittest.TestCase):
         expected_hash = imagehash.average_hash(expected_image)
         self.assertTrue(actual_hash, expected_hash)
         resp.pop("image")
-        self.assertAlmostEqual(resp["house_percentage"], 0.19)
-        self.assertAlmostEqual(resp["area_percentage"], 6.83)
+        self.assertAlmostEqual(resp["house_percentage"], 13.84)
+        self.assertAlmostEqual(resp["area_percentage"], 5.92)
 
 
 if __name__ == "__main__":
