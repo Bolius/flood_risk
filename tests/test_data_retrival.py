@@ -32,7 +32,7 @@ class TestDataRetrieval(unittest.TestCase):
     def test_bounding_box_espg_3857(self):
         data = address_to_house_data("Jarmers Pl. 2, 1551 København")
         box = bounding_box(data["coordinates"], boxSize=200, ESPG="3857")
-        self.assertEqual(
+        self.assertAlmostEqual(
             box,
             "1398592.0975429227,7494769.030811639,1398792.0975429227,7494969.030811639",
         )
@@ -59,7 +59,7 @@ class TestDataRetrieval(unittest.TestCase):
     def test_bounding_box_espg_25832(self):
         data = address_to_house_data("Kjærmarken 103, 6771 Gredstedbro")
         box = bounding_box(data["coordinates"], ESPG="25832")
-        self.assertEqual(
+        self.assertAlmostEqual(
             box,
             "483622.5205332278,6139451.85576636,483736.7176466355,6139564.964581125",
         )
