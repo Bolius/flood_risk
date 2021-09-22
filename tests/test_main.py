@@ -17,6 +17,36 @@ class TestRainRisk(unittest.TestCase):
         self.assertEqual(resp["rain_risk"]["risk"], "low")
         self.assertEqual(resp["storm_flood"]["risk"], "low")
 
+    def test_get_flood_risk_response_multiple(self):
+        adds = [
+            "Rolfsvej 21, st. tv. 2000 Frederiksberg",
+            "Højby Alle 3, Højby, 5260 Odense S",
+            "Blåregnvænget 9, 2830 Virum",
+            "Tørslevvej 4, Gerlev, 3630 Jægerspris",
+        ]
+        risks = [
+            ["high", "high", "low", "high", "medium", "low"],
+            ["low", "high", "low", "medium", "medium", "low"],
+            ["high", "high", "low", "high", "medium", "low"],
+            ["high", "medium", "low", "low", "medium", "low"],
+        ]
+        for i in range(0, len(adds)):
+            resp = json.loads(get_flood_risk(adds[i]))
+            self.assertEqual(
+                resp["rain_risk"]["factors"]["basement"]["risk"], risks[i][0]
+            )
+            self.assertEqual(
+                resp["rain_risk"]["factors"]["fastning"]["risk"], risks[i][1]
+            )
+            self.assertEqual(
+                resp["rain_risk"]["factors"]["hollowing"]["risk"], risks[i][2]
+            )
+            self.assertEqual(
+                resp["rain_risk"]["factors"]["conductivity"]["risk"], risks[i][3]
+            )
+            self.assertEqual(resp["rain_risk"]["risk"], risks[i][4])
+            self.assertEqual(resp["storm_flood"]["risk"], risks[i][5])
+
     def test_handler_address(self):
         event = {
             "httpMethod": "GET",

@@ -5,7 +5,7 @@ import os
 
 
 # Test class for checking the service providers we use for the calculator
-# Test parameters are chosen based on values that are know to work,
+# Test parameters are chosen based on values that are known to work,
 # and has no importance here.
 # These test are only to check if the providers are up, and that our credentials
 # are accepted.
@@ -47,21 +47,6 @@ class TestServices(unittest.TestCase):
             },
         )
         message = "Dawa returnede status kode " + str(response.status_code)
-        self.assertTrue(
-            (response.status_code >= 200) and (response.status_code <= 299), msg=message
-        )
-
-    def test_conzoom(self):
-        response = requests.request(
-            "GET",
-            "https://apps.conzoom.eu/api/v1/values/dk/unit/",
-            headers={"authorization": f"Basic {os.environ['GEO_KEY']}"},
-            params={
-                "where": "acadr_bbrid=40eb1f85-9c53-4581-e044-0003ba298018",
-                "vars": "bld_area_basement",
-            },
-        )
-        message = "Conzoom returnede status kode " + str(response.status_code)
         self.assertTrue(
             (response.status_code >= 200) and (response.status_code <= 299), msg=message
         )
