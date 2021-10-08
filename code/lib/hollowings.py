@@ -6,7 +6,6 @@ from io import BytesIO
 import numpy as np
 import requests
 from PIL import Image
-from scipy import ndimage
 
 from .config import HOLLOWING_COLOR, HOUSE_COLOR, IMAGE_SIZE, OVERLAP_COLOR
 from .data_retrieval import bounding_box, get_satelite_img
@@ -66,13 +65,10 @@ def house_percentage_hollowing(hollowingImg, buldingImg):
     hollowingImg = np.asarray(greyscale_to_binary_image(hollowingImg, thresshold=10))
     buldingImg = np.asarray(greyscale_to_binary_image(buldingImg, thresshold=10))
 
-    dilatedBuilding = ndimage.grey_dilation(buldingImg, size=(5, 5))
+    overlap = np.logical_and(hollowingImg, buldingImg).sum()
+    house_area = buldingImg.sum()
+    return overlap / house_area * 100
 
-    borderBuilding = np.logical_xor(dilatedBuilding, buldingImg)
-
-    dilatedOverlap = np.logical_and(hollowingImg, dilatedBuilding)
-
-    return dilatedOverlap.sum() / borderBuilding.sum() * 100
 
 
 def generate_image_summary(mapImg, buildingImg, hollowingImg):
