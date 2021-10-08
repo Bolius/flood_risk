@@ -40,7 +40,7 @@ def _checkNeighbours(arr, x, y, points):
 
 
 def combine_images(img1, img2):
-    """Takes two greyscale images and combines them."""
+    """ Takes two greyscale images and combines them. """
     if (img1.mode, img2.mode) != ("L", "L"):
         raise ValueError("Not a grayscale image")
 
