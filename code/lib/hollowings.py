@@ -70,7 +70,6 @@ def house_percentage_hollowing(hollowingImg, buldingImg):
     return overlap / house_area * 100
 
 
-
 def generate_image_summary(mapImg, buildingImg, hollowingImg):
     (x, y) = mapImg.size
     overlay = np.ndarray(shape=(x, y, 4), dtype=np.uint8)
