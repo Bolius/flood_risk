@@ -30,10 +30,10 @@ jobs:
       #    DATAFORDELEREN: ${{ secrets.DATAFORDELEREN}}
       #    DATAFORSYNINGEN: ${{ secrets.DATAFORSYNINGEN}}
 
-      - name: Uploading Coverage
-        run: coveralls
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      #- name: Uploading Coverage
+      #  run: coveralls
+      #  env:
+      #    COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
       - name: Checking black
         run: black --check .
