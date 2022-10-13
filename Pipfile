@@ -11,7 +11,8 @@ pyproj = "*"
 sentry-sdk = "*"
 imagehash = "*"
 coveralls = "*"
-coverage[toml] = "*"
+coverage = "*"
+toml = "*"
 flake8 = "*"
 
 [dev-packages]
