@@ -22,13 +22,13 @@ jobs:
           GEO_KEY: ${{ secrets.GEO_KEY }}
           DATAFORDELEREN: ${{ secrets.DATAFORDELEREN}}
           DATAFORSYNINGEN: ${{ secrets.DATAFORSYNINGEN}}
-
-      - name: Creating coverage
-        run: coverage run --source=. -m unittest
-        env:
-          GEO_KEY: ${{ secrets.GEO_KEY }}
-          DATAFORDELEREN: ${{ secrets.DATAFORDELEREN}}
-          DATAFORSYNINGEN: ${{ secrets.DATAFORSYNINGEN}}
+      # Comments temporarily disabled due to lack of TOML support in coverage version 6.5.0
+      #- name: Creating coverage
+      #  run: coverage run --source=. -m unittest
+      #  env:
+      #    GEO_KEY: ${{ secrets.GEO_KEY }}
+      #    DATAFORDELEREN: ${{ secrets.DATAFORDELEREN}}
+      #    DATAFORSYNINGEN: ${{ secrets.DATAFORSYNINGEN}}
 
       - name: Uploading Coverage
         run: coveralls
