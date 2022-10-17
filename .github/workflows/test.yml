@@ -30,7 +30,7 @@ jobs:
           DATAFORSYNINGEN: ${{ secrets.DATAFORSYNINGEN}}
        
       - name: Creating coverage
-        run:  
+        run: coverage run --source=. -m unittest  
         env:
           GEO_KEY: ${{ secrets.GEO_KEY }}
           DATAFORDELEREN: ${{ secrets.DATAFORDELEREN}}
