@@ -16,15 +16,21 @@ jobs:
         run: pip install pipenv
       - name: Install packages
         run: pipenv install --deploy --dev --system
+      
+      - name: Checking black
+        run: black --check .
+      - name: Checking Flake8
+        run: flake8 --max-complexity 8 .
+      
       - name: Run tests
         run: python -m unittest
         env:
           GEO_KEY: ${{ secrets.GEO_KEY }}
           DATAFORDELEREN: ${{ secrets.DATAFORDELEREN}}
           DATAFORSYNINGEN: ${{ secrets.DATAFORSYNINGEN}}
-
+       
       - name: Creating coverage
-        run: coverage run --source=. -m unittest
+        run: coverage run --source=. -m unittest  
         env:
           GEO_KEY: ${{ secrets.GEO_KEY }}
           DATAFORDELEREN: ${{ secrets.DATAFORDELEREN}}
@@ -35,7 +41,3 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
-      - name: Checking black
-        run: black --check .
-      - name: Checking Flake8
-        run: flake8 --max-complexity 8 .
