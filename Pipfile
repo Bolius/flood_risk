@@ -9,12 +9,11 @@ pillow = "*"
 pyproj = "*"
 sentry-sdk = "*"
 imagehash = "*"
+
+[dev-packages]
 coveralls = "*"
 coverage = "*"
 flake8 = "*"
-black = "*"
-
-[dev-packages]
 black = ">=20.8b1"
 
 [requires]
