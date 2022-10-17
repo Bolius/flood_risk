@@ -2,7 +2,7 @@ version: 0.3
 phases:
   install:
     runtime-versions:
-      python: 3.10
+      python: 3.9
   build:
     commands:
       - pip install --upgrade pip
