@@ -1,5 +1,5 @@
 import unittest
-import imagehash
+import numpy as np
 from code.lib import (
     address_to_house_data,
     bbr_id_to_house_data,
@@ -9,7 +9,7 @@ from code.lib import (
 )
 from os import path
 
-from PIL import Image
+from PIL import Image, ImageChops
 
 
 class TestDataRetrieval(unittest.TestCase):
@@ -67,12 +67,17 @@ class TestDataRetrieval(unittest.TestCase):
     def test_get_satelite_img(self):
         data = address_to_house_data("Jarmers Pl. 2, 1551 København")
         actual_image = get_satelite_img(data["coordinates"])
-        actual_hash = imagehash.average_hash(actual_image)
         expected_image = Image.open(
             path.join("tests", "test_images", "get_img_map.png")
         ).convert("RGB")
-        expected_hash = imagehash.average_hash(expected_image)
-        self.assertEqual(actual_hash, expected_hash)
+        # actual_image.save("actual_thumbnail.png", "PNG")
+        # expected_image.save("expected_thumbnail.png", "PNG")
+        # ImageChops.difference(actual_image,expected_image).save("diff_thumbnail.png", "PNG")
+        diff = (
+            np.asarray(ImageChops.difference(actual_image, expected_image)).sum().sum()
+        )
+        # print(diff)
+        self.assertEqual(diff, 0)
 
 
 if __name__ == "__main__":

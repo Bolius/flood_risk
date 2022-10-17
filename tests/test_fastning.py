@@ -1,5 +1,4 @@
 import base64
-import imagehash
 import unittest
 from code.lib import (
     address_to_house_data,
@@ -11,7 +10,8 @@ from io import BytesIO
 from os import path
 
 
-from PIL import Image
+from PIL import Image, ImageChops
+import numpy as np
 
 
 class TestFastning(unittest.TestCase):
@@ -49,9 +49,10 @@ class TestFastning(unittest.TestCase):
             path.join("tests", "test_images", "fastning_map_office.png")
         ).convert("RGB")
 
-        expected_hash = imagehash.average_hash(expected_image)
-        actual_hash = imagehash.average_hash(actual_image)
-        self.assertTrue(expected_hash, actual_hash)
+        diff = (
+            np.asarray(ImageChops.difference(actual_image, expected_image)).sum().sum()
+        )
+        self.assertEqual(diff, 0)
 
     def test_get_fasting_response_medium(self):
         home_coordinates = address_to_house_data("Kjærmarken 103, 6771 gredstedbro")[

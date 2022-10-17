@@ -1,6 +1,5 @@
 import base64
 import unittest
-import imagehash
 from code.lib import (
     address_to_house_data,
     coordinates_to_holllowing_images,
@@ -13,7 +12,7 @@ from io import BytesIO
 from os import path
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageChops
 
 
 class TestHollowings(unittest.TestCase):
@@ -26,20 +25,24 @@ class TestHollowings(unittest.TestCase):
             path.join("tests", "test_images", "get_img_buildings.png")
         ).convert("L")
 
-        actual_hash = imagehash.average_hash(actual_image)
-        expected_hash = imagehash.average_hash(expected_image)
-        self.assertEqual(actual_hash, expected_hash)
+        diff = (
+            np.asarray(ImageChops.difference(actual_image, expected_image)).sum().sum()
+        )
+        self.assertEqual(diff, 0)
 
     def test_get_img_hollowings(self):
         office_address = address_to_house_data("Jarmers Pl. 2, 1551 København")[
             "coordinates"
         ]
         actual_image = get_hollowing_img(office_address, "hollowings")
-
         expected_image = Image.open(
             path.join("tests", "test_images", "get_img_hollowings.png")
         ).convert("L")
-        self.assertEqual(actual_image, expected_image)
+
+        diff = (
+            np.asarray(ImageChops.difference(actual_image, expected_image)).sum().sum()
+        )
+        self.assertEqual(diff, 0)
 
     def test_get_img_buildings(self):
         office_address = address_to_house_data("Jarmers Pl. 2, 1551 København")[
@@ -54,9 +57,18 @@ class TestHollowings(unittest.TestCase):
                 path.join("tests", "test_images", "get_img_hollowings.png")
             ).convert("L"),
         ]
-        actual_hashes = [imagehash.average_hash(img) for img in actual_images]
-        expected_hashes = [imagehash.average_hash(img) for img in expected_images]
-        self.assertEqual(actual_hashes, expected_hashes)
+        diffs = np.array(
+            [
+                np.asarray(ImageChops.difference(actual_images[0], expected_images[0]))
+                .sum()
+                .sum(),
+                np.asarray(ImageChops.difference(actual_images[1], expected_images[1]))
+                .sum()
+                .sum(),
+            ]
+        )
+
+        self.assertEqual(diffs.sum(), 0)
 
     def test_house_percentage_hollowing(self):
         imgSize = (100, 100)
@@ -96,12 +108,13 @@ class TestHollowings(unittest.TestCase):
         resp = get_hollowing_response(office_address)
         actual_image = Image.open(BytesIO(base64.b64decode(resp["image"])))
         expected_image = Image.open(
-            path.join("tests", "test_images", "jarmars_hollwing_response.png")
+            path.join("tests", "test_images", "jarmers_hollowing_response.png")
         ).convert("RGB")
 
-        actual_hash = imagehash.average_hash(actual_image)
-        expected_hash = imagehash.average_hash(expected_image)
-        self.assertTrue(actual_hash, expected_hash)
+        diff = (
+            np.asarray(ImageChops.difference(actual_image, expected_image)).sum().sum()
+        )
+        self.assertEqual(diff, 0)
         resp.pop("image")
         self.assertAlmostEqual(resp["house_percentage"], 0.15)
         self.assertAlmostEqual(resp["area_percentage"], 5.92)
