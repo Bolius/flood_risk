@@ -2,10 +2,12 @@ import base64
 from . import (
     FASTNING_LIMITS,
     FASTNING_MAPPING,
+    FASTNING_LABELS,
     IMAGE_SIZE,
     bounding_box,
     get_satelite_img,
 )
+
 from io import BytesIO
 
 import numpy as np
@@ -52,8 +54,10 @@ def fastning_image_to_value(fastning_image):
                     )
                 )
             )
-            color_distance = (FASTNING_MAPPING - color).abs()
-            fastning_degrees.append(int(color_distance.sum(axis="columns").idxmin()))
+            color_distance = abs(FASTNING_MAPPING - color)
+            fastning_degrees.append(
+                FASTNING_LABELS[color_distance.sum(axis=1).argmin()]
+            )
 
     return np.round(np.array(fastning_degrees).mean(), 2)
 
@@ -63,7 +67,6 @@ def get_fastning_response(coordinates, sateliteImage=None):
         sateliteImage = get_satelite_img(coordinates)
     fastning_img = get_fastning_img(coordinates)
     fastning_value = fastning_image_to_value(fastning_img)
-
     risk = "high"
     if fastning_value < FASTNING_LIMITS["low"]:
         risk = "low"

@@ -4,7 +4,7 @@ import numpy as np
 import requests
 from PIL import Image
 
-from .config import CONDUCTIVITY_LIMITS, CONDUCTIVITY_MAPPING
+from .config import CONDUCTIVITY_LIMITS, CONDUCTIVITY_MAPPING, CONDUCTIVITY_LABELS
 from .data_retrieval import bounding_box
 
 
@@ -30,9 +30,9 @@ def get_conductivity_img(coordinates, imageSize=11):
 
 def color_to_conductivity(color):
     color = np.array(color) if type(color) != "numpy.ndarray" else color
-    color_channel_difs = (CONDUCTIVITY_MAPPING - color).abs()
-    color_distance = color_channel_difs.sum(axis="columns")
-    return int(color_distance.idxmin())
+    color_channel_difs = abs(CONDUCTIVITY_MAPPING - color)
+    color_distance = color_channel_difs.sum(axis=1)
+    return int(CONDUCTIVITY_LABELS[color_distance.argmin()])
 
 
 def get_conductivity_response(coordinates):
@@ -44,5 +44,4 @@ def get_conductivity_response(coordinates):
         risk = "high"
     elif conductivity_value < CONDUCTIVITY_LIMITS["medium"]:
         risk = "medium"
-
     return {"value": conductivity_value, "risk": risk}
