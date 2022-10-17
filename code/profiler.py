@@ -1,8 +1,10 @@
 from datetime import datetime
-import json
+
+# import json
 import asyncio
 import aiohttp
-import pandas as pd
+
+# import pandas as pd
 
 
 async def call_api(session, address):
@@ -25,22 +27,22 @@ async def fetch_all(addresses, loop):
         return results
 
 
-start = datetime.now()
-loop = asyncio.get_event_loop()
-with open("./test_addreesses.json") as dataFile:
-    addreses = json.load(dataFile)["objects"]
-    addreses = [add["values"]["acadr_name"] for add in addreses]
-results = loop.run_until_complete(fetch_all(addreses, loop))
-end = datetime.now()
-print(f"Ran {len(addreses)} in {end - start}")
-results = pd.DataFrame(results)
-results.to_csv("time_results.csv", index=False)
+# start = datetime.now()
+# loop = asyncio.get_event_loop()
+# with open("./test_addreesses.json") as dataFile:
+#     addreses = json.load(dataFile)["objects"]
+#     addreses = [add["values"]["acadr_name"] for add in addreses]
+# results = loop.run_until_complete(fetch_all(addreses, loop))
+# end = datetime.now()
+# print(f"Ran {len(addreses)} in {end - start}")
+# results = pd.DataFrame(results)
+# results.to_csv("time_results.csv", index=False)
 
 
-results = pd.read_csv("time_results.csv")
-times = results["time"].map(lambda time: float(time.split(":")[-1]))
-fig = times.plot(
-    kind="hist", title=f"Mean: {round(times.mean(),2)} -- STD: {round(times.std(),2)}"
-).get_figure()
-
-fig.savefig("l.png")
+# results = pd.read_csv("time_results.csv")
+# times = results["time"].map(lambda time: float(time.split(":")[-1]))
+# fig = times.plot(
+#     kind="hist", title=f"Mean: {round(times.mean(),2)} -- STD: {round(times.std(),2)}"
+# ).get_figure()
+#
+# fig.savefig("l.png")
