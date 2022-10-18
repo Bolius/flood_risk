@@ -23,7 +23,7 @@ def get_storm_flood_img(coordinates, imageSize=IMAGE_SIZE, depth=200):
             "REQUEST": "GetMap",
             "TOKEN": os.environ["DATAFORSYNINGEN"],
             "LAYERS": "dhm_havvandpaaland",
-            "STYLES": f"havvandpaaland_{out}", 
+            "STYLES": f"havvandpaaland_{out}",
             "VERSION": "1.1.0",
             "FORMAT": "image/png",
             "TRANSPARENT": "true",
