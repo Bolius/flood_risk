@@ -39,7 +39,7 @@ class TestServices(unittest.TestCase):
     def test_dawa(self):
         response = requests.request(
             "GET",
-            "https://dawa.aws.dk/adresser",
+            "https://api.dataforsyningen.dk/adresser",
             params={
                 "q": "Jarmers Pl. 2, 1551 København",
                 "struktur": "mini",

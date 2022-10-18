@@ -13,7 +13,7 @@ from .config import IMAGE_SIZE
 def address_to_house_data(address):
     response = requests.request(
         "GET",
-        "https://dawa.aws.dk/adresser",
+        "https://api.dataforsyningen.dk/adresser",
         params={"q": address, "struktur": "mini", "fuzzy": ""},
     )
     if response.status_code != 200:
@@ -30,7 +30,7 @@ def address_to_house_data(address):
 def bbr_id_to_house_data(bbr_id):
     response = requests.request(
         "GET",
-        f"https://dawa.aws.dk/adresser/{bbr_id}",
+        f"https://api.dataforsyningen.dk/adresser/{bbr_id}",
         params={"struktur": "mini"},
     )
     if response.status_code != 200:
