@@ -23,7 +23,7 @@ FASTNING_LIMITS = {
     # Higher than both gives high risk
 }
 
-STORM_FLOODING_PERCENTAGE_LIMIT = 0.10
+STORM_FLOODING_PERCENTAGE_LIMIT = 10.0
 STORM_FLOD_LIMITS = {  # Unit centimeters
     "low": 140,  # If flooded at this value risk is high
     "medium": 190  # If flooded at this value risk is medium

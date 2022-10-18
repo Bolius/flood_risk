@@ -15,6 +15,7 @@ class TestStormFlood(unittest.TestCase):
             "coordinates"
         ]
         actual_image = get_storm_flood_img(blox_coordinates)
+
         expected_image = Image.open(
             path.join("tests", "test_images", "blox_storm_flood.png")
         )
@@ -22,9 +23,9 @@ class TestStormFlood(unittest.TestCase):
         self.assertEqual(actual_image, expected_image)
 
     def test_get_storm_flod_response(self):
-        blox_coordinates = address_to_house_data("Bryghusgade, 1473 København")[
-            "coordinates"
-        ]
+        blox_coordinates = address_to_house_data(
+            "Vester Voldgade 129, 1552 København V"
+        )["coordinates"]
         blox_risk = get_storm_flod_response(blox_coordinates)["risk"]
         self.assertEqual(blox_risk, "medium")
 
