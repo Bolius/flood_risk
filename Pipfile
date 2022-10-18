@@ -8,7 +8,7 @@ requests = "*"
 pillow = "*"
 pyproj = "*"
 sentry-sdk = "*"
-imagehash = "*"
+numpy = "*"
 
 [dev-packages]
 coveralls = "*"
