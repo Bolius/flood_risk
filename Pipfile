@@ -9,6 +9,7 @@ pillow = "*"
 pyproj = "*"
 sentry-sdk = "*"
 numpy = "*"
+scikit-image = "*"
 
 [dev-packages]
 coveralls = "*"
