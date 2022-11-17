@@ -6,6 +6,7 @@ from io import BytesIO
 import numpy as np
 import requests
 from PIL import Image
+import skimage
 
 from .config import HOLLOWING_COLOR, HOUSE_COLOR, IMAGE_SIZE, OVERLAP_COLOR
 from .data_retrieval import bounding_box, get_satelite_img
@@ -61,23 +62,48 @@ def coordinates_to_holllowing_images(coordinates):
     ]
 
 
-def house_percentage_hollowing(hollowingImg, buldingImg):
-    hollowingImg = np.asarray(greyscale_to_binary_image(hollowingImg, thresshold=10))
-    buldingImg = np.asarray(greyscale_to_binary_image(buldingImg, thresshold=10))
+# Implemented to avoid using scipy. Should not increase runtime by that much.
+def conv2d(src, k):
+    d = int((k - 1) / 2)
+    out = np.copy(src)
+    for i in range(d, src.shape[0] - d):
+        for j in range(d, src.shape[1] - d):
+            if src[i, j]:
+                for a in range(-d, d):
+                    for b in range(-d, d):
+                        out[i + a, j + b] = True
+    return out
 
-    overlap = np.logical_and(hollowingImg, buldingImg).sum()
-    house_area = buldingImg.sum()
-    return overlap / house_area * 100
+
+def house_percentage_hollowing(hollowingImg, buildingImg):
+    hollowingImg = np.asarray(greyscale_to_binary_image(hollowingImg, thresshold=1))
+    buildingImg = np.asarray(greyscale_to_binary_image(buildingImg, thresshold=1))
+
+    labels = skimage.measure.label(buildingImg, connectivity=2, background=0)
+    w = int(hollowingImg.shape[0] / 2)
+    house_label = labels[w, w]
+
+    house = np.ma.masked_not_equal(labels, house_label)
+    house = np.logical_not(np.ma.getmaskarray(house))
+
+    house_border = np.logical_xor(conv2d(house, 9), house)
+
+    overlap = np.logical_and(house_border, conv2d(hollowingImg, 3))
+
+    overlap_area = overlap.sum()
+    house_area = house_border.sum()
+
+    return overlap_area / house_area * 100
 
 
 def generate_image_summary(mapImg, buildingImg, hollowingImg):
     (x, y) = mapImg.size
     overlay = np.ndarray(shape=(x, y, 4), dtype=np.uint8)
     hollowing_mask = np.asarray(greyscale_to_binary_image(hollowingImg, thresshold=10))
-    bulding_mask = np.asarray(greyscale_to_binary_image(buildingImg, thresshold=10))
-    overlap_mask = np.logical_and(hollowing_mask, bulding_mask)
+    building_mask = np.asarray(greyscale_to_binary_image(buildingImg, thresshold=10))
+    overlap_mask = np.logical_and(hollowing_mask, building_mask)
     overlay[:, :] = [np.uint8(n) for n in [0, 0, 0, 0]]
-    overlay[bulding_mask] = HOUSE_COLOR
+    overlay[building_mask] = HOUSE_COLOR
     overlay[hollowing_mask] = HOLLOWING_COLOR
     overlay[overlap_mask] = OVERLAP_COLOR
     overlay_image = Image.fromarray(overlay, mode="RGBA")
@@ -100,7 +126,7 @@ def get_hollowing_response(coordinates, sateliteImage=None):
     """ The method and thresshold for risk was determined by in house subject
         experts at Bolius
     """
-    risk = "high" if house_percentage > 25 else "low"
+    risk = "high" if house_percentage > 50 else "low"
 
     return {
         "house_percentage": house_percentage,
