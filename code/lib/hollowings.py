@@ -80,7 +80,8 @@ def house_percentage_hollowing(hollowingImg, buildingImg):
     buildingImg = np.asarray(greyscale_to_binary_image(buildingImg, thresshold=1))
 
     labels = skimage.measure.label(buildingImg, connectivity=2, background=0)
-    house_label = labels[200, 200]
+    w = int(hollowingImg.shape[0] / 2)
+    house_label = labels[w, w]
 
     house = np.ma.masked_not_equal(labels, house_label)
     house = np.logical_not(np.ma.getmaskarray(house))

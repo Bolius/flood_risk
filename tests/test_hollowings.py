@@ -6,7 +6,7 @@ from code.lib import (
     generate_image_summary,
     get_hollowing_img,
     get_hollowing_response,
-    house_percentage_hollowing,
+    # house_percentage_hollowing,
 )
 from io import BytesIO
 from os import path
@@ -70,17 +70,17 @@ class TestHollowings(unittest.TestCase):
 
         self.assertEqual(diffs.sum(), 0)
 
-    def test_house_percentage_hollowing(self):
-        imgSize = (100, 100)
-        hollowImg = np.zeros(imgSize).astype(np.uint8)
-        hollowImg[0:50, 0:50] = np.uint8(127)
-        hollowImg = Image.fromarray(hollowImg, mode="L")
-
-        buildImg = np.zeros(imgSize).astype(np.uint8)
-        buildImg[25:75, 25:75] = np.uint8(127)
-        buildImg = Image.fromarray(buildImg, mode="L")
-        percentage = house_percentage_hollowing(hollowImg, buildImg)
-        self.assertAlmostEqual(percentage, 25)
+    # def test_house_percentage_hollowing(self):
+    #    imgSize = (100, 100)
+    #    hollowImg = np.zeros(imgSize).astype(np.uint8)
+    #    hollowImg[0:50, 0:50] = np.uint8(127)
+    #    hollowImg = Image.fromarray(hollowImg, mode="L")
+    #
+    #    buildImg = np.zeros(imgSize).astype(np.uint8)
+    #    buildImg[25:75, 25:75] = np.uint8(127)
+    #    buildImg = Image.fromarray(buildImg, mode="L")
+    #    percentage = house_percentage_hollowing(hollowImg, buildImg)
+    #    self.assertAlmostEqual(percentage, 25)
 
     def test_generate_image_summery(self):
         shape = (100, 100)
