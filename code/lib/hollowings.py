@@ -66,8 +66,8 @@ def coordinates_to_holllowing_images(coordinates):
 def conv2d(src, k):
     d = int((k - 1) / 2)
     out = np.copy(src)
-    for i in range(0, src.shape[0]):
-        for j in range(0, src.shape[1]):
+    for i in range(d, src.shape[0] - d):
+        for j in range(d, src.shape[1] - d):
             if src[i, j]:
                 for a in range(-d, d):
                     for b in range(-d, d):
@@ -91,7 +91,7 @@ def house_percentage_hollowing(hollowingImg, buildingImg):
 
     overlap_area = overlap.sum()
     house_area = house_border.sum()
-    print(overlap_area / house_area * 100)
+
     return overlap_area / house_area * 100
 
 
@@ -125,7 +125,7 @@ def get_hollowing_response(coordinates, sateliteImage=None):
     """ The method and thresshold for risk was determined by in house subject
         experts at Bolius
     """
-    risk = "high" if house_percentage > 25 else "low"
+    risk = "high" if house_percentage > 50 else "low"
 
     return {
         "house_percentage": house_percentage,
