@@ -116,7 +116,7 @@ class TestHollowings(unittest.TestCase):
         )
         self.assertEqual(diff, 0)
         resp.pop("image")
-        self.assertAlmostEqual(resp["house_percentage"], 0.15)
+        self.assertAlmostEqual(resp["house_percentage"], 12.92)
         self.assertAlmostEqual(resp["area_percentage"], 5.92)
 
 
