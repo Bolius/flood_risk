@@ -15,6 +15,9 @@ jobs:
       run: zip -r release.zip . -x ".git/*" ".github/*"
     - name: Release to Github
       run: echo "Release"
+    - name: Temp Step
+      run: |
+        ls -la
     - uses: jakejarvis/s3-sync-action@master
       with:
         args: --acl public-read --follow-symlinks --delete
