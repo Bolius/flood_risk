@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@master
     
     - name: Zip Folder
-      run: zip -r release.zip .
+      run: zip -r release.zip . -x ".git/*" ".github/*"
     - name: Release to Github
       run: echo "Release"
     - uses: jakejarvis/s3-sync-action@master
@@ -23,4 +23,4 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: 'eu-central-1'   
-        SOURCE_DIR: '../../release.zip'
+        SOURCE_DIR: './release.zip'
