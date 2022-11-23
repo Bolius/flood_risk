@@ -7,8 +7,12 @@ phases:
     commands:
       - pip install --upgrade pip
       - pip install pipenv
-      - pipenv requirements > requirements.txt
-      - pip install -r requirements.txt -t code/
+      #- pipenv requirements > requirements.txt
+      #- pip install -r requirements.txt -t code/
+      - pipenv --python 3.9
+      - pipenv install
+      - pipenv shell  
+      # Maybe remove last line
       - export BUCKET=bolius-digital-ml-model-containers
       - aws cloudformation package --template-file template.yml --s3-bucket $BUCKET --output-template-file outputtemplate.yml
 artifacts:
