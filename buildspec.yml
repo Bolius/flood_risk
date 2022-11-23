@@ -16,6 +16,9 @@ artifacts:
   files:
     - template.yml
     - outputtemplate.yml
+  exclude-paths: 
+    - ./**/node_modules/**
+    - ./**/venv/**
 
 package:
   exclude:
