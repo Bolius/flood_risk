@@ -6,7 +6,7 @@ from io import BytesIO
 import numpy as np
 import requests
 from PIL import Image
-import skimage
+import scipy
 
 from .config import HOLLOWING_COLOR, HOUSE_COLOR, IMAGE_SIZE, OVERLAP_COLOR
 from .data_retrieval import bounding_box, get_satelite_img
@@ -79,7 +79,7 @@ def house_percentage_hollowing(hollowingImg, buildingImg):
     hollowingImg = np.asarray(greyscale_to_binary_image(hollowingImg, thresshold=1))
     buildingImg = np.asarray(greyscale_to_binary_image(buildingImg, thresshold=1))
 
-    labels = skimage.measure.label(buildingImg, connectivity=2, background=0)
+    labels, _ = scipy.ndimage.label(buildingImg)
     w = int(hollowingImg.shape[0] / 2)
     house_label = labels[w, w]
 
