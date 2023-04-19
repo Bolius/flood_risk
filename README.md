@@ -75,7 +75,8 @@ pipenv shell from the project root.
 
 The code on the master branch is automatically deployed to an AWS Lambda setup.
 The master branch has protection and requires the tests to pass before a merge
-is possible.
+is possible. OBS: Be careful when upgrading packages. We are close to a max file
+size supported by Lambda. If possible, avoid upgrading too much.
 
 * * *
 
