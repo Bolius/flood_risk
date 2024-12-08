@@ -5,7 +5,7 @@ charset-normalizer==2.1.1 ; python_full_version >= '3.6.0'
 coverage==6.5.0
 coveralls==3.3.1
 docopt==0.6.2
-flake8==5.0.4
+flake8==6.0.0
 idna==3.4 ; python_version >= '3.5'
 imagehash==4.3.1
 mccabe==0.7.0 ; python_version >= '3.6'
